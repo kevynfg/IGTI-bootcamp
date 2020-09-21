@@ -1,9 +1,41 @@
 <!DOCTYPE html>
-<html lang="ptbr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trabalho Prático RGB</title>
-  </head>
-  <body></body>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./src/css/reset.css">
+  <link rel="stylesheet" href="./src/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <title>Trabalho Prático RGB</title>
+</head>
+
+<body>
+  <header class="container">
+    <h1>Gerador RGB para CSS</h1>
+  </header>
+  <section>
+    <main class="container">
+      <div class="caixaRange">
+        <div class="grid-item">(R) Vermelho:</div>
+        <div class="grid-item"><input class="red" type="range" id="red" value="128" min="0" max="255" step="1"></input>
+        </div>
+        <div class="grid-item"><input type="text" id="textRed" value="128" disabled></input></div>
+        <div class="grid-item">(G) Verde: </div>
+        <div class="grid-item"><input class="green" type="range" id="green" value="128" min="0" max="255"
+            step="1"></input></div>
+        <div class="grid-item"><input type="text" id="textGreen" value="128" disabled></input></div>
+        <div class="grid-item">(B) Azul: </div>
+        <div class="grid-item"><input class="blue" type="range" id="blue" value="128" min="0" max="255"
+            step="1"></input></div>
+        <div class="grid-item"><input type="text" id="textBlue" value="128" disabled></input></div>
+      </div>
+      <div class="paletaCores" id="paletaCores">teste</div>
+    </main>
+  </section>
+  <footer>Trabalho Prático RGB IGTI - Bootcamp Dev Full-stack</footer>
+
+  <script src="./src/index.js"></script>
+</body>
+
 </html>
