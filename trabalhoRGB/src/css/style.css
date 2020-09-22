@@ -46,7 +46,7 @@ footer {
 }
 
 .grid-item {
-    text-align: left;
+    align-items: left;
     font-size: 2rem;
 }
 
@@ -55,6 +55,7 @@ input[type=text] {
     width: 5vw;
     color: black;
     text-align: center;
+    align-items: right;
     background-color: white;
 }
 
@@ -128,3 +129,14 @@ input[type=range] {
     width: 64vw;
     height: 20vh;
   }
+
+  .copypasta {
+      background-color: black;
+      color: white;
+      opacity: 0.5;
+      font-size: 1rem;
+      height: 8vh;
+      width: 20vw;
+      text-align: left;
+      padding: 5px;
+  } 
