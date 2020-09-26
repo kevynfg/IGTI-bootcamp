@@ -1,17 +1,15 @@
-window.addEventListener('load', start)
+let globalNames = []
+let currentIndex
+let isEditing = false
 
-var globalNames = []
-var currentIndex
-var isEditing = false
-
-function start() {
+window.addEventListener('load', () => {
     PreventFormSubmit()
     let focusAndclear = document.querySelector('#inputNome')
     focusAndclear.focus()
     focusAndclear.value = ''
     render()
     activateInput()
-}
+})
 
 function PreventFormSubmit() {
     function handleFormSubmit(event) {
@@ -25,7 +23,7 @@ function PreventFormSubmit() {
 
 function activateInput() {
     function insertName(newName) {
-        globalNames.push(newName)
+        globalNames = [...globalNames, newName]
         inputName.value = ''
         render()
     }
@@ -36,12 +34,12 @@ function activateInput() {
 
     function handleTyping(event) {
 
-        let hasText = !!event.target.value && event.target.value.trim() !== '' 
+        let hasText = !!event.target.value && event.target.value.trim() !== ''
 
-        if(!hasText) {
+        if (!hasText) {
             return
         }
-        
+
         if (event.key === 'Enter') {
             if (isEditing) {
                 updateName(event.target.value)
@@ -63,7 +61,9 @@ function activateInput() {
 function render() {
     function createDeleteButton(index) {
         function deleteName() {
-            globalNames.splice(index, 1)
+            //variáveis que não são usadas em parâmetros, pode-se usar (_) para ignorar
+            globalNames = globalNames.filter((_, i) => i !== index)
+
             let focarInput = document.querySelector('input#inputNome')
             focarInput.focus()
             focarInput.value = ''
