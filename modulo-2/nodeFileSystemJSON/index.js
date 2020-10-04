@@ -1,4 +1,4 @@
-import { promises as fs, write } from 'fs';
+import { promises as fs } from 'fs';
 
 writeReadJson();
 
