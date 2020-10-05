@@ -1,11 +1,4 @@
-import { kStringMaxLength } from 'buffer';
 import { promises as fs } from 'fs';
-import readLine from 'readline';
-
-const rl = readLine.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
 
 let listaEstados = [];
 let listaCidades = [];
@@ -14,7 +7,8 @@ Init();
 
 async function Init() {
   await criarFolders();
-  await buscarUF('RN');
+  //await buscarUF('TO');
+  await estadosComMaisCidades();
 }
 
 async function criarFolders() {
@@ -41,29 +35,44 @@ async function criarFolders() {
 
 async function buscarUF(string) {
   try {
-    const filtrarUF = listaEstados.map((estado) => {
-      return {
-        Sigla: estado.Sigla,
-      };
+    const data = JSON.parse(await fs.readFile(`./UF/${string}.json`));
+    //console.log(data.length);
+    return data.length;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function estadosComMaisCidades(mais) {
+  try {
+    const estados = JSON.parse(await fs.readFile('Estados.json'));
+    const lista = [];
+
+    for (let estado of estados) {
+      //busco a quantidade de cidades de cada estado
+      //passando a sigla para a function que traz a quantidade
+      const count = await buscarUF(estado.Sigla);
+      lista.push({ uf: estado.Sigla, count });
+    }
+
+    lista.sort((a, b) => {
+      return a.count - b.count;
     });
-    rl.question(
-      'Digite o UF de estado que deseja buscar, ou digite sair: ',
-      async (string) => {
-        try {
-          if (string.toLocaleLowerCase() === 'sair') {
-            rl.close();
-          } else {
-            const data = JSON.parse(await fs.readFile(`./UF/${string}.json`));
-            console.log(data);
-            buscarUF();
-          }
-        } catch (error) {
-          error = 'UF inválido.';
-          console.log(error);
-          buscarUF();
-        }
-      }
-    );
+    console.log(lista);
+
+    const resultados = [];
+    if (mais) {
+      lista
+        //Extrai os primeiros valores da lista
+        .slice(0, 5)
+        .forEach((item) => resultados.push(item.uf + ' - ' + item.count));
+    } else {
+      lista
+        //Extrai os últimos valores da lista
+        .slice(-5)
+        .forEach((item) => resultados.push(item.uf + ' - ' + item.count));
+    }
+    console.log(resultados.reverse());
   } catch (error) {
     console.log(error);
   }
