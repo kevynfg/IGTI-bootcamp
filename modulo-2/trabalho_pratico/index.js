@@ -115,9 +115,12 @@ async function cidadeComMaisLetras(menor) {
           return CurrentCidade;
         }
       })
-
-      console.log(`\nCidade com menos letras no estado de ${estado.Sigla} é: ${Nome}`);
+      arrayDeCidades.push(Nome + ' - ' + estado.Sigla)
     }
+    
+    arrayDeCidades.sort((a, b) => a.length - b.length)
+    console.log(`Cidades com maiores nomes de cada estado`, arrayDeCidades)
+
   } catch (error) {
     console.error('Deu ruim', error);
   }
@@ -126,7 +129,9 @@ async function cidadeComMaisLetras(menor) {
 async function cidadeComMaisLetrasDeTodas(menor) {
   try {
     const estados = JSON.parse(await fs.readFile('Estados.json'));
-    let arrayDeCidades = [];
+    const arrayDeCidades = {
+      nomes: [],
+    };
     for (let estado of estados) {
       const JsonEstados = JSON.parse(
         await fs.readFile(`./UF/${estado.Sigla}.json`)
@@ -144,9 +149,9 @@ async function cidadeComMaisLetrasDeTodas(menor) {
       });
 
       //Armazena os nomes das cidades de todos os Json dos Estados em um único array
-      arrayDeCidades.push(Nome);
+      arrayDeCidades.nomes.push(`${Nome} - ${estado.Sigla}`);
     }
-    const cidadeNomeMaior = arrayDeCidades.reduce(
+    const cidadeNomeMaior = arrayDeCidades.nomes.reduce(
       (prevCidade, CurrentCidade) => {
         if (!menor) {
           if (prevCidade.length > CurrentCidade.length) return prevCidade;
@@ -157,6 +162,7 @@ async function cidadeComMaisLetrasDeTodas(menor) {
         }
       }
     );
+    arrayDeCidades.nomes.sort((a, b) => a.nomes - b.nomes);
     if (!menor) {
       console.log(
         `Cidade com maior nome dentre os estados: ${cidadeNomeMaior}`
