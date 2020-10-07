@@ -9,7 +9,10 @@ async function main() {
   await criarJsons();
   //await QtdCidadesPorUF('TO');
   await cidadeComMaisLetras();
+  //Tire o comentário da function debaixo se quiser cidades com menos letras
+  //await cidadeComMaisLetras('menor');
   await estadosComMaisCidades();
+  await cidadeComMaisLetrasDeTodas('menor');
 }
 
 async function criarJsons() {
@@ -92,22 +95,75 @@ async function estadosComMaisCidades(mais) {
     console.log(error);
   }
 }
-
-async function cidadeComMaisLetras() {
+//prettier-ignore
+async function cidadeComMaisLetras(menor) {
   try {
     const estados = JSON.parse(await fs.readFile('Estados.json'));
+    let arrayDeCidades = []
+    for (let estado of estados) {
+      const JsonEstados = JSON.parse(
+        await fs.readFile(`./UF/${estado.Sigla}.json`)
+      );
+      const {Nome} = JsonEstados.reduce((prevCidade, CurrentCidade) => {
+        if (!menor) {
+          if (prevCidade.Nome.length > CurrentCidade.Nome.length)
+            return prevCidade;
+          return CurrentCidade;
+        } else {
+          if (prevCidade.Nome.length < CurrentCidade.Nome.length)
+            return prevCidade;
+          return CurrentCidade;
+        }
+      })
 
+      console.log(`\nCidade com menos letras no estado de ${estado.Sigla} é: ${Nome}`);
+    }
+  } catch (error) {
+    console.error('Deu ruim', error);
+  }
+}
+
+async function cidadeComMaisLetrasDeTodas(menor) {
+  try {
+    const estados = JSON.parse(await fs.readFile('Estados.json'));
+    let arrayDeCidades = [];
     for (let estado of estados) {
       const JsonEstados = JSON.parse(
         await fs.readFile(`./UF/${estado.Sigla}.json`)
       );
       const { Nome } = JsonEstados.reduce((prevCidade, CurrentCidade) => {
-        if (prevCidade.Nome.length > CurrentCidade.Nome.length)
-          return prevCidade;
-        return CurrentCidade;
+        if (!menor) {
+          if (prevCidade.Nome.length > CurrentCidade.Nome.length)
+            return prevCidade;
+          return CurrentCidade;
+        } else {
+          if (prevCidade.Nome.length < CurrentCidade.Nome.length)
+            return prevCidade;
+          return CurrentCidade;
+        }
       });
+
+      //Armazena os nomes das cidades de todos os Json dos Estados em um único array
+      arrayDeCidades.push(Nome);
+    }
+    const cidadeNomeMaior = arrayDeCidades.reduce(
+      (prevCidade, CurrentCidade) => {
+        if (!menor) {
+          if (prevCidade.length > CurrentCidade.length) return prevCidade;
+          return CurrentCidade;
+        } else {
+          if (prevCidade.length < CurrentCidade.length) return prevCidade;
+          return CurrentCidade;
+        }
+      }
+    );
+    if (!menor) {
       console.log(
-        `\nCidade com mais letra no estado de ${estado.Sigla} é: ${Nome}`
+        `Cidade com maior nome dentre os estados: ${cidadeNomeMaior}`
+      );
+    } else {
+      console.log(
+        `Cidade com menor nome dentre os estados: ${cidadeNomeMaior}`
       );
     }
   } catch (error) {
