@@ -1,5 +1,5 @@
 {
-  "nextId": 3,
+  "nextId": 12,
   "accounts": [
     {
       "id": 1,
@@ -10,6 +10,46 @@
       "id": 2,
       "name": "Maryzinha",
       "balance": "2900"
+    },
+    {
+      "id": 4,
+      "name": "Shurastei shuragou",
+      "balance": "2000"
+    },
+    {
+      "id": 5,
+      "name": "Shurastei",
+      "balance": "9.999"
+    },
+    {
+      "id": 6,
+      "name": "Shurastei",
+      "balance": "9.999"
+    },
+    {
+      "id": 7,
+      "name": "Shurastei",
+      "balance": "9.999"
+    },
+    {
+      "id": 8,
+      "name": "Shurastei",
+      "balance": "9.999"
+    },
+    {
+      "id": 9,
+      "name": "Shurastei",
+      "balance": "9.999"
+    },
+    {
+      "id": 10,
+      "name": "Shurastei",
+      "balance": "9.999"
+    },
+    {
+      "id": 11,
+      "name": "Shurastei",
+      "balance": "9.999"
     }
   ]
 }
