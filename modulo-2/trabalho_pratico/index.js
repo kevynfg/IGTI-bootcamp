@@ -103,14 +103,14 @@ async function cidadeComMaisLetras(menor) {
     for (let estado of estados) {
       const JsonEstados = JSON.parse(
         await fs.readFile(`./UF/${estado.Sigla}.json`)
-        );
+      );
 
       const arrayCidade = []
 
       JsonEstados.map((cidade) => {
         arrayCidade.push(cidade.Nome)
       })
-      
+
       arrayCidade.sort((a, b) => a.Nome - b.Nome)
       const Nome = arrayCidade.reduce((prevCidade, CurrentCidade) => {
         if (!menor) {
@@ -123,7 +123,7 @@ async function cidadeComMaisLetras(menor) {
           return CurrentCidade;
         }
       })
-      results.push({Cidade: Nome, Sigla: estado.Sigla})
+      results.push({ Cidade: Nome, Sigla: estado.Sigla })
     }
     console.log(`Cidades com maior ou menor número de letras no nome: `, results)
   } catch (error) {
