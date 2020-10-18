@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { promises as fs, write } from 'fs';
+import { promises as fs } from 'fs';
 
 global.fileName = 'grades.json';
 
@@ -107,7 +107,7 @@ router.delete('/:id', async (req, res, next) => {
     }
 });
 
-router.get('/alunos/notas', async (req, res, next) => {
+router.get('/alunos/notas/geral', async (req, res, next) => {
     try {
         let subject_type = []
         const { subject, type } = req.body
@@ -121,8 +121,58 @@ router.get('/alunos/notas', async (req, res, next) => {
         subject_type.forEach((nota) => {
             notaTotal += nota.notas
         })
-        console.log(notaTotal)
+        console.log({ subject, type, "Nota em geral": notaTotal })
         res.send(`Nota total em ${subject} do tipo ${type} é: ${notaTotal}`);
+    } catch (err) {
+        next(err)
+    }
+});
+
+router.get('/alunos/notas/media', async (req, res, next) => {
+    try {
+        let subject_type = []
+        const { subject, type } = req.body
+        const data = JSON.parse(await readFile(global.fileName));
+        data.grades.filter((person) => {
+            if (person.subject == subject || person.type == type) {
+                subject_type.push({ notas: person.value })
+            }
+        })
+        let notaTotal = 0
+        subject_type.forEach((nota) => {
+            notaTotal += nota.notas
+        })
+        console.log({ subject, type, "Média em geral": (notaTotal / subject_type.length) })
+        res.send(`Média total em ${subject} do tipo ${type} é: ${(notaTotal / subject_type.length)}`);
+    } catch (err) {
+        next(err)
+    }
+});
+
+router.get('/alunos/notas/top3', async (req, res, next) => {
+    try {
+        let subject_type = []
+        const { subject, type } = req.body
+        const data = JSON.parse(await readFile(global.fileName));
+        data.grades.filter((person) => {
+            if (person.subject == subject || person.type == type) {
+                subject_type.push({ student: person.student, value: person.value })
+            }
+        })
+
+        subject_type.sort((a, b) => {
+            return a.value - b.value
+        })
+
+        const resultados = []
+        subject_type
+            .slice(-3)
+            .forEach((grade) => {
+                resultados.push([grade.student, grade.value])
+            })
+
+        console.log(resultados)
+        res.send({"Melhores 3 notas são": resultados})
     } catch (err) {
         next(err)
     }
