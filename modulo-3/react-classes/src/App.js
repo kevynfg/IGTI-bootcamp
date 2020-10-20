@@ -1,43 +1,60 @@
-import React, { Component, Fragment } from 'react';
-import Band from './components/Counter/Band';
-import Counter from './components/Counter/Counter'
-import Counter2 from './components/Counter/Counter2';
+import React, { Component } from 'react';
+import Toggle from './components/Toggle/Toggle';
+import Users from './components/Users/Users'
 
 export default class App extends Component {
     constructor() {
         super()
 
         this.state = {
-            currentCounter: 3,
-            steps: 0
+            users: [],
+            showUsers: false
         }
+
     }
 
-    handleCount = (clickType) => {
-        const { currentCounter, steps } = this.state;
+    async componentDidMount() {
+        const res = await fetch('https://randomuser.me/api/?seed=javascript&results=10&nat=BR&noinfo')
+
+        const json = await res.json()
+
         this.setState({
-            currentCounter: clickType === '+' ? currentCounter + 1 : currentCounter - 1,
-            steps: steps + 1
+            users: json.results
+        })
+
+    }
+
+    handleShowUsers = (isChecked) => {
+        this.setState({
+            showUsers: isChecked
         })
     }
 
+    componentDidUpdate() {
+        console.log('DidUpdate')
+    }
+
+    componentWillUnmount() {
+        console.log('Unmount')
+    }
+
     render() {
-        const { currentCounter, steps } = this.state
+        const { showUsers, users } = this.state
+        //console.log(showUsers)
         return (
-            <Fragment>
-                <h3>Band</h3>
-                <Band />
+            <div>
+                <h3>React LifeCycle</h3>
+                <Toggle description="Mostrar usuários: "
+                    enabled={showUsers}
+                    onToggle={this.handleShowUsers} />
+                <hr />
+                
+                {
+                    //Se showUsers for verdadeiro, mostra os usuários ->
+                    showUsers && <div><Users users={users} /></div>
+                }
 
-                <h3>Counter 1 - Exemplo de estado de componente individual</h3>
-                <Counter /> <Counter /> <Counter />
-
-                <h3>Counter 2 - Exemplo de estado compartilhado</h3>
-                <Counter2 onCount={this.handleCount} countValue={currentCounter} currentSteps={steps} />
-                <Counter2 onCount={this.handleCount} countValue={currentCounter} currentSteps={steps} />
-                <Counter2 onCount={this.handleCount} countValue={currentCounter} currentSteps={steps} />
-            </Fragment>
-
-
+            </div>
         )
     }
 }
