@@ -1,38 +1,45 @@
-import React, { Component } from 'react';
-import ProjetoBase from './components/ProjetoBase/ProjetoBase'
-import { getNewTimeStamp } from './helpers/dateTimeHelpers'
+import React, { Component, Fragment } from 'react';
+import Band from './components/Counter/Band';
+import Counter from './components/Counter/Counter'
+import Counter2 from './components/Counter/Counter2';
 
 export default class App extends Component {
-  constructor() {
-    super()
+    constructor() {
+        super()
 
-    this.state = {
-      clickArray: [],
+        this.state = {
+            currentCounter: 3,
+            steps: 0
+        }
     }
-  }
 
-  handleClick = () => {
-    const newClickArray = Object.assign([], this.state.clickArray);
-    newClickArray.push(getNewTimeStamp())
+    handleCount = (clickType) => {
+        const { currentCounter, steps } = this.state;
+        this.setState({
+            currentCounter: clickType === '+' ? currentCounter + 1 : currentCounter - 1,
+            steps: steps + 1
+        })
+    }
 
-    this.setState({ clickArray: newClickArray })
-  }
+    render() {
+        const { currentCounter, steps } = this.state
+        return (
+            <Fragment>
+                <h3>Band</h3>
+                <Band />
 
-  render() {
-    const { clickArray } = this.state
+                <h3>Counter 1 - Exemplo de estado de componente individual</h3>
+                <Counter /> <Counter /> <Counter />
 
-    return <div>
-      <h1>React com class components</h1>
+                <h3>Counter 2 - Exemplo de estado compartilhado</h3>
+                <Counter2 onCount={this.handleCount} countValue={currentCounter} currentSteps={steps} />
+                <Counter2 onCount={this.handleCount} countValue={currentCounter} currentSteps={steps} />
+                <Counter2 onCount={this.handleCount} countValue={currentCounter} currentSteps={steps} />
+            </Fragment>
 
-      <button onClick={this.handleClick}>Adicionar timestamp</button>
 
-      <ul>
-        {clickArray.map((item) => {
-          return <li>{item}</li>
-        })}
-      </ul>
-    </div>
-  }
+        )
+    }
 }
 
 
