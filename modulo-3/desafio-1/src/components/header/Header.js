@@ -1,31 +1,39 @@
-import React, { Component } from 'react'
-import { formatNumber } from '../helpers/formatHelpers'
+import React from 'react';
+import { formatNumber } from '../helpers/formatHelpers';
 
-import css from './header.module.css'
+import css from './header.module.css';
 
-export default class Header extends Component {
+export default function Header({
+  filter,
+  countryCount,
+  totalPopulation,
+  onChangeFilter,
+}) {
+  const handleInputChange = (event) => {
+    const newText = event.target.value;
 
-    handleInputChange = (event) => {
-        const newText = event.target.value
+    onChangeFilter(newText);
+  };
 
-        this.props.onChangeFilter(newText)
-    }
-
-    render() {
-        const { filter, countryCount, totalPopulation } = this.props
-        return (
-            <div className={css.flexRow}>
-                <input type="text" placeholder="Filtro"
-                    style={{ width: '200px' }}
-                    value={filter}
-                    onChange={this.handleInputChange}></input> |
-                <span className={css.country}>Países: <strong>{countryCount}</strong></span> |
-                <span className={css.population}>População:
-                <strong>
-                        {formatNumber(totalPopulation)}
-                    </strong>
-                </span> |
-            </div>
-        )
-    }
+  return (
+    <div className={css.flexRow}>
+      <input
+        type="text"
+        placeholder="Filtro"
+        style={{ width: '200px' }}
+        value={filter}
+        onChange={handleInputChange}
+      ></input>{' '}
+      |
+      <span className={css.country}>
+        Países: <strong>{countryCount}</strong>
+      </span>{' '}
+      |
+      <span className={css.population}>
+        População:
+        <strong>{formatNumber(totalPopulation)}</strong>
+      </span>{' '}
+      |
+    </div>
+  );
 }
