@@ -1,50 +1,39 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import User from './User';
 
 //import css from './counter.module.css'
 
-export default class Users extends Component {
-  constructor() {
-    super();
+export default function Users({ users }) {
+  const [secondsVisible, setSecondsVisible] = useState(0);
 
-    this.state = {
-      secondsVisible: 0,
-    };
-  }
-  componentDidMount() {
-    this.interval = setInterval(() => {
-      const { secondsVisible } = this.state;
-      this.setState({
-        secondsVisible: secondsVisible + 1,
-      });
+  /* 
+*
+  Ativa o interval da variável e monitora a variável
+  caso ela mude o estado dela 
+*
+*/
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSecondsVisible(secondsVisible + 1);
     }, 1000);
-  }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [secondsVisible]);
 
-  componentDidUpdate() {
-    console.log('DidUpdate de Users.js');
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  render() {
-    const { users } = this.props;
-    const { secondsVisible } = this.state;
-    return (
-      <div>
-        <p>Seconds visible {secondsVisible} seconds</p>
-        <ul>
-          {users.map((user) => {
-            const { login } = user;
-            return (
-              <li key={login.uuid}>
-                <User user={user} />
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <p>Seconds visible {secondsVisible} seconds</p>
+      <ul>
+        {users.map((user) => {
+          const { login } = user;
+          return (
+            <li key={login.uuid}>
+              <User user={user} />
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
 }
