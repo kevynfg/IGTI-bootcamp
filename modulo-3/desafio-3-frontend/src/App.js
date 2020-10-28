@@ -52,7 +52,7 @@ export default class App extends Component {
       <div className="container">
         <Header>Votação</Header>
         <Candidates
-          previousVote={previousVotes}
+          previousVotes={previousVotes}
           previousPercentages={previousPercentages}
           candidates={candidates}
         />
