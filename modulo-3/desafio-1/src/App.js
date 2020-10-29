@@ -1,83 +1,77 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import Countries from './components/countries/Countries';
 import Header from './components/header/Header';
 
-export default class App extends Component {
-    constructor() {
-        super()
+export default function App() {
+  const [AllCountries, setAllCountries] = useState([]);
+  const [filteredCountries, setfilteredCountries] = useState([]);
+  const [FilteredPopulation, setFilteredPopulation] = useState(0);
+  const [userFilter, setUserFilter] = useState('');
 
-        this.state = {
-            AllCountries: [],
-            filteredCountries: [],
-            FilteredPopulation: 0,
-            filter: ''
+  useEffect(() => {
+    const getCountries = async () => {
+      const res = await fetch('https://restcountries.eu/rest/v2/all');
+      let allCountries = await res.json();
+      allCountries = allCountries.map(
+        ({ name, numericCode, flag, population }) => {
+          return {
+            id: numericCode,
+            name,
+            filteredName: name.toLowerCase(),
+            flag,
+            population,
+          };
         }
-    }
+      );
+      setAllCountries(allCountries);
+      /*Copia e armazena os Countries em um vetor diferente
+        para não dar conflito ao alterar o AllCountries
+        e alterar o filteredCountries junto */
+      setfilteredCountries(Object.assign([], allCountries));
+    };
 
-    async componentDidMount() {
-        const res = await fetch('https://restcountries.eu/rest/v2/all')
-        const json = await res.json()
+    getCountries();
+  }, []);
 
-        const AllCountries = json.map(({ name, numericCode, flag, population }) => {
-            return {
-                id: numericCode,
-                name,
-                filteredName: name.toLowerCase(),
-                flag,
-                population
-            }
-        })
+  const calculatePopulationFrom = (countries) => {
+    const totalPopulation = countries.reduce((accumulator, current) => {
+      return accumulator + current.population;
+    }, 0);
 
-        const FilteredPopulation = this.calculatePopulationFrom(AllCountries)
+    return totalPopulation;
+  };
 
-        this.setState({
-            AllCountries,
-            filteredCountries: Object.assign([], AllCountries),
-            FilteredPopulation
-        })
-    }
+  const handleChangeFilter = (newText) => {
+    setUserFilter(newText);
 
-    calculatePopulationFrom = (countries) => {
-        const totalPopulation = countries.reduce((accumulator, current) => {
-            return accumulator + current.population
-        }, 0)
+    const filterLowerCase = newText.toLowerCase();
 
-        return totalPopulation
-    }
+    const filteredCountries = AllCountries.filter((country) => {
+      return country.filteredName.includes(filterLowerCase);
+    });
 
-    handleChangeFilter = (newText) => {
-        this.setState({
-            filter: newText
-        })
+    const FilteredPopulation = calculatePopulationFrom(filteredCountries);
 
-        const filterLowerCase = newText.toLowerCase()
+    setfilteredCountries(filteredCountries);
+    setFilteredPopulation(FilteredPopulation);
+  };
 
-        const filteredCountries = this.state.AllCountries.filter((country) => {
-            return country.filteredName.includes(filterLowerCase)
-        })
-
-        const FilteredPopulation = this.calculatePopulationFrom(filteredCountries)
-
-        this.setState({
-            filteredCountries,
-            FilteredPopulation
-        })
-
-    }
-
-    render() {
-        const { filteredCountries, filter, FilteredPopulation } = this.state
-
-        return (
-            <div className="container">
-                <h1>React All Countries</h1>
-                <Header
-                    filter={filter}
-                    countryCount={filteredCountries.length}
-                    totalPopulation={FilteredPopulation}
-                    onChangeFilter={this.handleChangeFilter} />
-                <Countries countries={filteredCountries} />
-            </div>
-        )
-    }
+  return (
+    <div className="container">
+      <h1 style={styles.centeredTitle}>React All Countries</h1>
+      <Header
+        filter={userFilter}
+        countryCount={filteredCountries.length}
+        totalPopulation={FilteredPopulation}
+        onChangeFilter={handleChangeFilter}
+      />
+      <Countries countries={filteredCountries} />
+    </div>
+  );
 }
+
+const styles = {
+  centeredTitle: {
+    textAlign: 'center',
+  },
+};
