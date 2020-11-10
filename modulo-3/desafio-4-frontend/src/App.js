@@ -45,6 +45,29 @@ export default function App() {
     setisModalOpen(true);
   };
 
+  const handlePersistData = async (formData) => {
+    const { id, newValue } = formData;
+
+    const newGrades = Object.assign([], allGrades);
+
+    const gradeToPersist = newGrades.find((grade) => grade.id === id);
+    gradeToPersist.value = newValue;
+
+    //Inserir a grade com o botão de editar ou modificar com update
+    if (gradeToPersist.isDeleted) {
+      gradeToPersist.isDeleted = false;
+      await api.insertGrade(gradeToPersist);
+    } else {
+      await api.upgradeGrade(gradeToPersist);
+    }
+
+    setisModalOpen(false);
+  };
+
+  const handleClose = () => {
+    setisModalOpen(false);
+  };
+
   return (
     <div>
       <h1 className="center">Controle de notas</h1>
@@ -57,7 +80,13 @@ export default function App() {
         />
       )}
 
-      {isModalOpen && <ModalGrade />}
+      {isModalOpen && (
+        <ModalGrade
+          onSave={handlePersistData}
+          onClose={handleClose}
+          selectedGrade={selectedGrade}
+        />
+      )}
     </div>
   );
 }

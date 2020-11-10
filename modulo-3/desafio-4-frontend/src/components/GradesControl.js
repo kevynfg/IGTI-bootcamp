@@ -31,7 +31,6 @@ export default function GradesControl({ grades, onDelete, onPersist }) {
     //Caso passe da condição acima, armazena o que vier
     currentGrades.push(grade);
   });
-  console.log(tableGrades);
 
   //Após o loop, inserimos o último item
   //que não é inserido durante o loop
@@ -46,6 +45,7 @@ export default function GradesControl({ grades, onDelete, onPersist }) {
   const handleActionClick = (id, type) => {
     if (type === 'delete') {
       onDelete(grade);
+      return;
     }
 
     onPersist(onPersist);
@@ -122,7 +122,7 @@ export default function GradesControl({ grades, onDelete, onPersist }) {
 const styles = {
   goodGrade: {
     fontWeight: 'bold',
-    color: 'gree',
+    color: 'green',
   },
   badGrade: {
     fontWeight: 'bold',
