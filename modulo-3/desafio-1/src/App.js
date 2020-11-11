@@ -1,77 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import Countries from './components/countries/Countries';
-import Header from './components/header/Header';
+import { getNewTimeStamp } from './helpers/dateTimeHelpers';
 
 export default function App() {
-  const [AllCountries, setAllCountries] = useState([]);
-  const [filteredCountries, setfilteredCountries] = useState([]);
-  const [FilteredPopulation, setFilteredPopulation] = useState(0);
-  const [userFilter, setUserFilter] = useState('');
+  const [clickArray, setClickArray] = useState([]);
 
   useEffect(() => {
-    const getCountries = async () => {
-      const res = await fetch('https://restcountries.eu/rest/v2/all');
-      let allCountries = await res.json();
-      allCountries = allCountries.map(
-        ({ name, numericCode, flag, population }) => {
-          return {
-            id: numericCode,
-            name,
-            filteredName: name.toLowerCase(),
-            flag,
-            population,
-          };
-        }
-      );
-      setAllCountries(allCountries);
-      /*Copia e armazena os Countries em um vetor diferente
-        para não dar conflito ao alterar o AllCountries
-        e alterar o filteredCountries junto */
-      setfilteredCountries(Object.assign([], allCountries));
-    };
+    document.title = clickArray.length;
+  });
 
-    getCountries();
-  }, []);
+  const handleClick = () => {
+    const newClickArray = Object.assign([], clickArray);
+    newClickArray.push(getNewTimeStamp());
 
-  const calculatePopulationFrom = (countries) => {
-    const totalPopulation = countries.reduce((accumulator, current) => {
-      return accumulator + current.population;
-    }, 0);
-
-    return totalPopulation;
-  };
-
-  const handleChangeFilter = (newText) => {
-    setUserFilter(newText);
-
-    const filterLowerCase = newText.toLowerCase();
-
-    const filteredCountries = AllCountries.filter((country) => {
-      return country.filteredName.includes(filterLowerCase);
-    });
-
-    const FilteredPopulation = calculatePopulationFrom(filteredCountries);
-
-    setfilteredCountries(filteredCountries);
-    setFilteredPopulation(FilteredPopulation);
+    setClickArray(newClickArray);
   };
 
   return (
-    <div className="container">
-      <h1 style={styles.centeredTitle}>React All Countries</h1>
-      <Header
-        filter={userFilter}
-        countryCount={filteredCountries.length}
-        totalPopulation={FilteredPopulation}
-        onChangeFilter={handleChangeFilter}
-      />
-      <Countries countries={filteredCountries} />
+    <div>
+      <h1>React com class components</h1>
+
+      <button onClick={handleClick}>Adicionar timestamp</button>
+
+      <ul>
+        {clickArray.map((item) => {
+          return <li>{item}</li>;
+        })}
+      </ul>
     </div>
   );
 }
-
-const styles = {
-  centeredTitle: {
-    textAlign: 'center',
-  },
-};

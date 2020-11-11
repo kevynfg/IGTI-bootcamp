@@ -1,6 +1,6 @@
 import React from 'react';
 
-import css from '../countries/countries.module.css';
+import css from './countries.module.css';
 
 export default function Country({ country }) {
   const { flag } = country;
