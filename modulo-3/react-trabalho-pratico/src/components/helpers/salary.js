@@ -73,12 +73,12 @@ function calculateDiscountIRPF(baseIRPF) {
     baseIRPF < 1903.98
       ? 0
       : baseIRPF < 2826.65
-        ? round(baseIRPF * 0.075) - 142.8
-        : baseIRPF < 3751.05
-          ? round(baseIRPF * 0.15) - 354.8
-          : baseIRPF < 4664.68
-            ? round(baseIRPF * 0.225) - 636.13
-            : round(baseIRPF * 0.275) - 869.36;
+      ? round(baseIRPF * 0.075) - 142.8
+      : baseIRPF < 3751.05
+      ? round(baseIRPF * 0.15) - 354.8
+      : baseIRPF < 4664.68
+      ? round(baseIRPF * 0.225) - 636.13
+      : round(baseIRPF * 0.275) - 869.36;
 
   discountIRPF = round(discountIRPF);
 
