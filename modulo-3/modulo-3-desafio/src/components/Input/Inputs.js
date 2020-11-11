@@ -7,12 +7,10 @@ export default function Installment(props) {
   };
 
   return (
-    <div className="input-field">
+    <div className="col input-field s6 m4 l4">
       <input
-        style={{ width: '100px' }}
         id={id}
         type="number"
-        placeholder="Quantidade de caixas"
         min={min}
         max={max}
         step={step}
