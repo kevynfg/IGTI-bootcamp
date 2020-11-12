@@ -1,0 +1,24 @@
+Projeto react-calculator
+========================
+
+[x] Mostrar constructor e state:
+   - number: 1
+   - calculations: {square: 1, squareRoot: 1, fatorial: 1}
+
+[x] Mostrar ciclo do componente <MainInput />
+
+[x] Mostrar funções para realizar os cálculos de quadrado,
+   raiz quadrada e fatorial e utilização em componentDidUpdate
+
+[x] Retirar comparação de state de componentDidUpdate
+   e ver o que acontece
+
+[x] Mostrar componente <InputReadOnly />
+
+[x] Criar botão para dobrar valor do Input e verificar se os 
+   cálculos são refletidos
+
+[x] Mover lógica dos cálculos para handleInputChange e verificar 
+   que os cálculos não são mais refletidos
+
+[] "Faça o computador trabalhar para você"
