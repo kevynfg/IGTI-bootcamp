@@ -1,0 +1,198 @@
+**COMANDOS MongoDB**
+
+db.student.find()
+db.student.find({$or: [{subject: "Química"}, {subject: "matematica"}]}, {_id:0}).pretty()
+db.student.find({}, {_id:0, name: 1, value: 1}).limit(3)
+
+
+--OPERADORES LÓGICOS--
+$and: [{subject: "Química"}, {type: "prova final"}]
+$not
+
+--TODOS OS DOCUMENTOS QUE NÃO ATENDEM AO CRITÉRIO
+$nor: [{subject: "Química"}, {type: "prova final"}]
+$or: [{subject: "Química"}, {subject: "matematica"}]
+
+
+--OPERADORES DE COMPARAÇÃO--
+$eq ==
+$gt >
+$gte >=
+$in
+$lt
+$lte
+$ne
+$nin
+
+db.student.find({value: {$gt: 20}}, {_id:0}).pretty()
+db.student.find({subject: {$in: ["Química", "Matemática"]}}, {_id:0}).pretty()
+
+db.COLLECTION.find(query, projection) -> query é o filtro dos documentos que estará trazendo
+					-> projection é quais os campos do documento que estará trazendo
+
+
+
+--PULAR A PRIMEIRA LINHA--
+db.student.find({}, {_id:0, name: 1, value: 1}).limit(3).skip(1)
+
+--BUSCAR QUERY EM ORDEM CRESCENTE == 1, DECRESCENTE == -1
+db.student.find({}, {_id:0, name: 1, value: 1}).sort({name: 1})
+db.student.find({}, {_id:0, name: 1, value: 1}).sort({name: -1}).limit(3)
+
+--TRAZ VIZUALIZAÇÃO MELHOR DA QUERY--
+db.student.find().pretty()
+
+--TRAZ O PRIMEIRO REGISTRO APENAS--
+db.student.findOne()
+
+--FERRAMENTAS PARA A QUERY--
+db.student.find(query, projection).limit(n)
+db.student.find(query, projection).skip(n)
+db.student.find(query, projection).sort({fieldA: 1, fieldB: -1})
+db.student.find(query, projection).pretty()
+
+
+--INSERT PARA POPULAR O BANCO--
+db.student.insertMany([{name: "Victor Novaes", subject: "Português", type: "Trabalho Prático", value: 15.8}
+, {name: "Pedro Henrique", subject: "Física", type: "Prova Final", value: 12.9} ,
+{name: "Fernanda Tolentino", subject: "Matemática", type: "Trabalho Prático", value: 19}, 
+{name: "Antônia Alvarenga", subject: "História", type: "Prova Intermediária", value: 12}, 
+{name: "Felipe Amorim", subject: "Química", type: "Prova Final", value: 10}, 
+{name: "Gustavo Amorim", subject: "Geografia", type: "Trabalho Prático", value: 16}])
+
+
+	**COMANDOS UPDATE**
+db.student.updateOne({name: "Ana Maria Silva", subject: "Geografia"}, {$set: {type: "Prova Final"}})
+
+db.student.updateOne({name: "Ana Maria Silva", subject: "Geografia"}, {$inc: {value: 10}})
+
+db.student.updateMany({subject: "Matemática", type: "Trabalho Prático"}, {$inc: {value: 10}})
+
+
+	** ADICIONA TODOS OS DOCUMENTOS INCLUINDO DOIS NOVOS CAMPOS, COM $set **
+db.student.updateMany({}, {$currentDate: {lastModified: true, timestamp: {$type: "timestamp"}}})
+
+
+	**REMOVE UM CAMPO**
+db.student.updateMany({}, {$unset: {timestamp:1}})
+
+
+	**SUBSTITUI DOCUMENTO** 
+	***PRECISA SERIALIZAR O ID COM OBJECTID PARA ACHAR O ID***
+db.student.replaceOne({_id: ObjectId("5fb6ca8a3245017a8aea8b73")}, {name: "Lucas Pereira", subject: "Física", type: "Prova Final", value: 15.4, lastModified: "$$NOW"})
+
+
+	**DELETE**
+
+db.collection.deleteOne(filter)
+db.student.deleteOne({_id: ObjectId("")})
+
+db.collection.deleteMany()
+db.student.deleteMany({subject: "Física"})
+
+
+	**BulkWrite** (COMANDOS EM MASSA)
+
+db.COLLECTION.bulkwrite([operacao1, operacao2, ...], options)
+
+db.student.bulkWrite([
+{insertOne: 
+	{
+		"document": {name: "Thiago Peixto",
+ 		subject: "Física", type: "Prova Final",
+ 		value: 16, timestamp: new Date()
+	}
+}}, 
+{insertOne: {"document": 
+	{
+	name: "Shurastei Shuragou", subject: "Matemática",
+ 	type: "Trabalho Prático", value: 20.3,
+ 	timestamp: new Date()
+	}
+}},
+{updateOne: {
+	"filter": {name: "Victor Novaes"},
+	"update": {$set: {subject: "História"}
+	}
+}},
+{deleteOne: 
+	{
+	"filter": {name: "Pedro Henrique", type: "Prova Final", subject: "Física"
+	}
+}},
+{replaceOne: 
+	{
+	"filter": {_id: ObjectId("5fd3e13632848c2b035fad4a")},
+	"replacement" : {name: "Tais Bernardes", subject: "Física",
+ 	type: "Trabalho Prático",
+ 	value: 12.5, lastModified: new Date()
+	}
+}}
+], {ordered: false})
+
+insertOne
+updateOne
+updateMany
+deleteOne
+deleteMany
+replaceOne
+
+	**INDEXES**
+
+db.COLLECTION.getIndexes()
+
+db.COLLECTION.createIndex({})
+
+Exclusão pelo nome do índice
+db.student.createIndex({"name_-1"})
+
+Excluir todos os índices exceto o _id
+db.COLLECTION.dropIndexes(*)
+
+Exclusão pelo campo
+db.student.dropIndexes({name: -1})
+
+Índice para campos textuais
+db.COLLECTION.createIndex({biografia: "text"})
+
+Buscar 3 ìndices criado, ordenado
+db.student.find({$text: {$search: "matemática"}}, ${_id: 1, autoria: 1, score: ${meta: "textScore}})
+.sort({score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}}).limit(3)
+
+
+	**AGREGAÇÃO**
+
+db.student.aggregate([
+{$project: {}},
+{$match: { campo: "X"}},
+{$group: {_id: "$campo", total: {$sum: "$campo$}}},
+{$sort: {}},
+{$skip: N},
+{$limit: N}
+])
+
+**CAMPO _ID é OBRIGATÓRIO**
+db.student.aggregate([
+{$group: {_id: null, total: {$sum: "$value"}}}
+])
+
+db.student.aggregate([
+{$match: {subject: "Matemática"}},
+{$group: {_id: {subject: "$subject", type: "$type"}, total: {$sum: "$value"}}},
+{$sort: {_id: 1}}
+])
+
+db.student.aggregate([
+{$match: {subject: "Matemática"}},
+{$group: {_id: {subject: "$subject", type: "$type"}, total: {$sum: "$value"}}}
+])
+
+	**COUNT**
+
+db.COLLECTION.count(query)
+db.COLLECTION.countDocuments(query)
+db.student.count({subject: "Matemática", value: {$gt: 10}, type: "Trabalho Prático"})
+db.student.countDocuments({subject: "Física"})
+
+db.COLLECTION.distinct(field, query)
+db.student.distinct("subject")

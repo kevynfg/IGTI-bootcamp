@@ -190,8 +190,8 @@ export default function App() {
   };
 
   return (
-    <div className='container'>
-      <div className='center'>
+    <div className="container">
+      <div className="center">
         <h1>Bootcamp Full Stack - Desafio Final</h1>
         <h2>Controle Financeiro Pessoal</h2>
       </div>

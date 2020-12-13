@@ -21,6 +21,9 @@ function getEmptyArray() {
   return array;
 }
 
+//Existe uma regra, que estas funções não geram 1
+//por isso o + 1 é usado
+//vai até o número 61
 function generateNumber(min = 1, max = 60) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -53,13 +56,16 @@ export default function App() {
         return;
       }
 
+      //Faz cópia dos dois arrays gerados para trabalhar depois
       const newNumber = generateNumber();
       const newNumbers = [...numbers];
       const newPickedNumbers = [...pickedNumbers];
 
+      //Se encontrar o item sorteado no array -> incrementa o contador dele
       const item = newNumbers.find((item) => item.value === newNumber);
       item.count++;
 
+      //Se o contador chegou no limite colocado no input
       if (item.count === limit) {
         newPickedNumbers.push(item.value);
       }
@@ -94,8 +100,8 @@ export default function App() {
   };
 
   return (
-    <div className='container'>
-      <h1 className='center'>React Megasena</h1>
+    <div className="container">
+      <h1 className="center">React Megasena</h1>
 
       <Form
         onButtonClick={handleButtonClick}
