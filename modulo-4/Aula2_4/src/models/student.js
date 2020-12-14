@@ -23,19 +23,19 @@ import mongoose from 'mongoose';
 const studentSchema = mongoose.Schema({
   name: {
     type: String,
-    require: true,
+    required: true,
   },
   subject: {
     type: String,
-    require: true,
+    required: true,
   },
   type: {
     type: String,
-    require: true,
+    required: true,
   },
   value: {
     type: Number,
-    require: true,
+    required: true,
     validate(value) {
       if (value < 0) throw new Error('Não é permitido valor negativo.');
     },
