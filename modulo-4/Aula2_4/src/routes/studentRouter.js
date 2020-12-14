@@ -1,62 +1,54 @@
 import express from 'express';
-import studentModel from '../models/studentModel.js';
+import { studentModel } from '../models/student.js';
 
 const app = express();
 
-//CREATE
-app.post('/student', async (req, res) => {
-  try {
-    const student = new studentModel(req.body);
+app.get('/student', async (req, res) => {
+  const student = await studentModel.find({});
 
+  try {
+    res.send(student);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+app.post('/student', async (req, res) => {
+  const student = new studentModel(req.body);
+
+  try {
     await student.save();
     res.send(student);
-  } catch (error) {
-    res.status(500).send(error);
+  } catch (err) {
+    res.status(500).send(err);
   }
 });
 
-//RETRIEVE
-app.get('/student', async (req, res) => {
-  try {
-    const student = await studentModel.find({});
-    res.send(student);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-//UPDATE
-app.patch('student/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
-    const student = await studentModel.findByIdAndUpdate(
-      { _id: id },
-      req.body,
-      {
-        new: true,
-      }
-    );
-    res.send(student);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-//DELETE
 app.delete('/student/:id', async (req, res) => {
   try {
-    const id = req.params.id;
-    const student = await studentModel.findByIdAndDelete({ _id: id });
+    const student = await studentModel.findOneAndDelete(req.params.id);
 
     if (!student) {
-      res.status(404).send('Documento não encontrado');
-    } else {
-      res.status(200).send();
+      res.status(404).send('Documento nao encontrado');
     }
 
+    res.status(200).send();
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+app.patch('/student/:id', async (req, res) => {
+  try {
+    const student = await studentModel.findOneAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
     res.send(student);
-  } catch (error) {
-    res.status(500).send(error);
+  } catch (err) {
+    res.status(500).send(err);
   }
 });
 

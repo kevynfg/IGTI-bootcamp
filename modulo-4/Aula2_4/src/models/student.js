@@ -6,18 +6,18 @@ import mongoose from 'mongoose';
 //   useUnifiedTopology: true,
 // });
 
-mongoConnect();
+//mongoConnect();
 
 //Conectar ao mongo db atlas (nuvem)
-async function mongoConnect() {
-  mongoose.connect(
-    'mongodb+srv://kevynfg:ke452366@cluster0.7ozho.mongodb.net/grades?retryWrites=true&w=majority',
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  );
-}
+// async function mongoConnect() {
+//   mongoose.connect(
+//     'mongodb+srv://kevynfg:ke452366@cluster0.7ozho.mongodb.net/grades?retryWrites=true&w=majority',
+//     {
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//     }
+//   );
+// }
 
 //Criar o modelo
 const studentSchema = mongoose.Schema({
@@ -50,7 +50,7 @@ const studentSchema = mongoose.Schema({
 //Definir o modelo para student
 const studentModel = mongoose.model('student', studentSchema, 'student');
 
-export default { studentModel };
+export { studentModel };
 
 // const student = mongoose.model('student');
 // new student({
