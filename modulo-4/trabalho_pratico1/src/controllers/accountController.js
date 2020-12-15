@@ -7,11 +7,11 @@ const deposit = async (req, res) => {
 
   try {
     let newDeposit = await validateAccount(account);
+
     newDeposit.balance += account.balance;
-    //console.log('Antes do new modelo', newDeposit);
     newDeposit = new Account(newDeposit);
-    //console.log('Depois do new modelo', newDeposit);
     await newDeposit.save();
+
     res.send(newDeposit);
   } catch (error) {
     res.status(500).send('Error ao depositar', error);
@@ -175,7 +175,7 @@ const transferToPrivate = async (req, res) => {
     //Busca pela agencia privada e balance
     let transferToPrivates = await Account.aggregate([
       {
-        $grou: {
+        $group: {
           _id: '$agencia',
           balance: { $max: '$balance' },
         },
