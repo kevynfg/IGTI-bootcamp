@@ -37,9 +37,13 @@ const withdraw = async (req, res) => {
 const checkBalance = async (req, res) => {
   const agencia = req.params.agencia;
   const conta = req.params.conta;
-
+  const account = {
+    agencia,
+    conta,
+  };
   try {
-    const checkBalance = await validateAccount({ agencia, conta });
+    let checkBalance = await Account.findOne(agencia);
+    console.log(account);
     res.send(checkBalance);
   } catch (error) {
     res.status(500).send('Error ao consultar', error);
