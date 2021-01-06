@@ -90,7 +90,7 @@ async function estadosComMaisCidades(mais) {
         .slice(-5)
         .forEach((item) => resultados.push(item.uf + ' - ' + item.count));
     }
-    console.log(resultados.reverse());
+    console.log('5 cidades com mais ou menos estados', resultados.reverse());
   } catch (error) {
     console.log(error);
   }

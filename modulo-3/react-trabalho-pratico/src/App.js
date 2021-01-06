@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { calculateSalaryFrom } from '../src/components/helpers/salary';
-import InputReadOnly from './components/inputs/InputReadOnly';
-import InputSalary from './components/inputs/InputSalary';
+import InputReadOnly from './components/inputs/inputReadOnly';
+import InputSalary from './components/inputs/inputSalary';
 import ProgressBarSalary from './components/ProgressBarSalary/ProgressBarSalary';
 
 export default class App extends Component {
