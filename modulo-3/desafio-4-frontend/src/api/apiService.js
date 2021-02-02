@@ -122,6 +122,7 @@ async function getValidationFromGradeType(gradeType) {
   const gradeValidation = GRADE_VALIDATION.find(
     (item) => item.gradeType === gradeType
   );
+  console.log(gradeValidation);
   const { minValue, maxValue } = gradeValidation;
   return {
     minValue,

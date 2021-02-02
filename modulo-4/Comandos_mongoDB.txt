@@ -1,5 +1,16 @@
 **COMANDOS MongoDB**
 
+**** SELECIONAR PASTA PARA TRABALHAR COM MONGODB ****
+mongod –dbpath=
+“CAMINHO_CRIADO_CONFORME_PASSO_ANTERIOR”.
+
+
+**** ACESSAR O BANCO DE DADOS ****
+O acesso ao banco via linha de comando para execução dos comandos nos
+dados, é realizado pelo comando: mongo –host localhost:27017.
+
+
+
 db.student.find()
 db.student.find({$or: [{subject: "Química"}, {subject: "matematica"}]}, {_id:0}).pretty()
 db.student.find({}, {_id:0, name: 1, value: 1}).limit(3)

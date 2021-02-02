@@ -26,7 +26,7 @@ async function criarJsons() {
       let index = listaCidades.filter(
         (cidade) => cidade.Estado === listaEstados[i].ID
       );
-      //console.log(index);
+      console.log(index);
       await fs.writeFile(
         `./UF/${listaEstados[i].Sigla}.json`,
         JSON.stringify(index)
